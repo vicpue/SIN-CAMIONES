@@ -72,7 +72,7 @@ def func_mover_camion_ciudad(state, camion, conductor, destino):
                    ('mover_camion_ciudad', camion , conductor, destino)
             ]      
     if lugar != destino: # estoy subido y voy viajando
-        z = siguienteCiudad_camion( state, lugar , destino, camion) 
+##############z = siguienteCiudad_camion( state, lugar , destino, camion) 
         print ("z: " + z)
         if z != 'no_conectado':
             return [ ('viajar_op_camion', camion, z), 
