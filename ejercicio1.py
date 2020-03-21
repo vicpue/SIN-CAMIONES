@@ -38,5 +38,5 @@ state1.contenido_camiones= {'T1':[], 'T2':[]}
 
 
 pyhop.pyhop(state1, [ 
-                     ('mover_todo_a_destino', [ ['D1', 'C1'], ['T1', 'C1'], ['P1', 'C1'], ['P2','C2']  ] )  
+                     ('mover_todo_destino', [ ['D1', 'C1'], ['T1', 'C1'], ['P1', 'C1'], ['P2','C2']  ] )  
                      ], verbose=3)
