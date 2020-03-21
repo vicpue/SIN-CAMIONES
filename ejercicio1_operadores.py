@@ -59,5 +59,6 @@ def viajar_a_pie(state, conductor, destino):
     else:
         return False
     
-pyhop.declare_opertators(cargar_paquete, descargar_paquete, conductor_subir_camion, conductor_bajar_camion, viajar_en_camion, viajar_a_pie)
+pyhop.declare_operators(cargar_paquete, descargar_paquete, conductor_subir_camion, conductor_bajar_camion, viajar_en_camion, viajar_a_pie)
 pyhop.print_operators()
+
