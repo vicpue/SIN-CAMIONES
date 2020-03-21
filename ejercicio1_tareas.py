@@ -107,7 +107,7 @@ def func_paquete_destino(state, paquete, destino):
         print("No hay coductores disponibles")
         return False
     camion = seleccionarCamion(state, lugarPaquete)
-    if (camion =='no_camion') ot (camion == 'no_camion_accesible'):
+    if (camion =='no_camion') or (camion == 'no_camion_accesible'):
         print("No hay ni conductores ni camiones disponibles")
         return False
     lugarCamion = state.ubi_camion[camion]
@@ -126,7 +126,7 @@ def func_mover_conductor_destino(state, conductor, destino):
     if(destino not in state.ciudad) and (destino not in state.parada):
         print('La ciudad '+ciudad+ ' no existe')
         return False
-     if conductor not in state.conductor:
+    if conductor not in state.conductor:
          print('El conductor '+conductor+ ' no existe' )
          return False
     lugar = state.ubi_conductor[conductor]
