@@ -23,9 +23,19 @@ def no_traer_conductor(state,conductor,ciudad):
 
 def func_main(state, objetos_destinos):
 #no se lo que hay que poner
+for dupla in objetos_destinos:
+    objeto = dupla[0]
+    destino = dupla[1]
+    if objeto in state.conductor:
+        return[('mover_conductor_destino', objeto, destino)]
+    elif objeto in state.paquete:
+        return[('mover_paquete_ciudad',objeto, destino)]
+    elif objeto in state.camion:
+        return[('mover_camion_ciudad',objeto, destino)]
+    else
+        return[False]    
 
-
-def func_mover_camion_ciudad(state, camion, conductor, destino):
+def func_mover_camion_ciudad(state, camion, destino):
     if destino not in state.ciudad:
         print('La ciudad '+destino+' no existe')
         return False
@@ -45,7 +55,7 @@ def func_mover_camion_ciudad(state, camion, conductor, destino):
     return False
 
 
-def func_paquete_destino(state, camion, conductor, paquete, destino):
+def func_paquete_destino(state, paquete, destino):
     if destino not in state.ciudad:
         print('La ciudad '+destino+' no existe')
         return False
