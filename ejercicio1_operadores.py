@@ -63,7 +63,6 @@ def viajar_a_pie(state, conductor, destino):
                         if((p == y[0]) and (lugar == y[1])):
                             state.ubi_conductor[conductor] = destino
                             return state
-                print('ERROR AQUI'+str(x)+'*******'+str(p)+'  DESTINO:'+destino+'  LUGAR:'+lugar+'  CONDUCTOR:'+conductor)
     else:
         for i in range(len(state.senda)):
             if((lugar == state.senda[i][0]) and (destino == state.senda[i][1])):
