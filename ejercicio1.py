@@ -47,8 +47,9 @@ state1.ubi_paquete={'P1':'C0','P2':'C0'}
 
 state1.contenido_camiones= {'T1':[], 'T2':[]}
 
-
-
+goal1 = pyhop.Goal('goal1')
+#goal1 = [ ['D1', 'C1'], ['D2', 'C2'], ['T1', 'C1'], ['T2', 'C0'], ['P1', 'C1'], ['P2','C2']  ]
+goal1 = {'D1':'C1','D2':'C2', 'T1':'C1','T2':'C0', 'P1':'C1','P2':'C2' }
 pyhop.pyhop(state1, [ 
-                     ('mover_todo_destino', [ ['D1', 'C1'], ['D2', 'C2'], ['T1', 'C1'], ['T2', 'C0'], ['P1', 'C1'], ['P2','C2']  ] )  
+                     ('mover_todo_destino', goal1 )  
                      ], verbose=3)

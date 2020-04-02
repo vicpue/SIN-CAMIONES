@@ -10,9 +10,7 @@ def traer_andando(state,conductor,ciudad):
     if cond not in state.ciudad:
         return [('viajar_a_pie', conductor, ciudad)]
     else:
-        for p in state.parada:
-         if (ciudad in state.senda[p]) and (p in state.senda[cond]): 
-            return [('viajar_a_pie', conductor, ciudad)]
+        return [('viajar_a_pie', conductor, ciudad)]
     return False
 
 def traer_conduciendo(state,conductor,ciudad):
@@ -20,9 +18,11 @@ def traer_conduciendo(state,conductor,ciudad):
     if cond not in state.ciudad:
         return False
     else:
-        for i in range(len(state.carretera)):
-            if ((ciudad == state.carretera[i][0]) and (cond==state.carretera[i][1])): 
-                return [('viajar_en_camion', conductor, ciudad)]
+        for camion in state.camion:
+            if(cond==state.ubi_camion[camion]):
+                for i in range(len(state.carretera)):
+                    if ((ciudad == state.carretera[i][0]) and (cond==state.carretera[i][1])): 
+                        return [('viajar_en_camion',conductor, camion, ciudad)]
     return False
 
 def no_traer_conductor(state,conductor,ciudad):
@@ -41,26 +41,33 @@ def traer_camion(state,camion,destino):
     for conductor in state.conductor:
         return[ ('conseguir_conductor',conductor,destino),
                 ('conductor_subir_camion', conductor, camion),
-                ('viajar_en_camion',conductor, destino),
+                ('viajar_en_camion',conductor, camion, destino),
                 ('conductor_bajar_camion', conductor, camion)
                 ]
 
 def func_main(state, objetos_destinos):
-    for dupla in range(len(objetos_destinos)):
-        print('numero de objetos '+ str(range(len(objetos_destinos))))
-        objeto = objetos_destinos[dupla][0]
-        destino = objetos_destinos[dupla][1]
+    if len(objetos_destinos)>0:
+        for who in objetos_destinos.keys():
+            objeto = who
+            destino = objetos_destinos.pop(who)
+            break
         if objeto in state.conductor:
-            return[('mover_conductor_destino', objeto, destino)]
+            return[('mover_conductor_destino', objeto, destino),
+            ('mover_todo_destino', objetos_destinos)
+            ]
         elif objeto in state.paquete:
-            return[('mover_paquete_ciudad',objeto, destino)]
+            return[('mover_paquete_ciudad',objeto, destino),
+            ('mover_todo_destino', objetos_destinos)
+            ]
         elif objeto in state.camion:
-            return[('mover_camion_ciudad',objeto, destino)]
+            return[('mover_camion_ciudad',objeto, destino),
+            ('mover_todo_destino', objetos_destinos)
+            ]
         else:
             return []    
-    return False 
+    return []
 
-def func_mover_camion_ciudad(state, conductor, camion, destino):
+def func_mover_camion_ciudad(state, camion, destino):
     if destino not in state.ciudad:
         print('La ciudad '+destino+' no existe')
         return False
@@ -68,23 +75,31 @@ def func_mover_camion_ciudad(state, conductor, camion, destino):
         print('El camion '+camion+ ' no existe')
         return False
     cam = state.ubi_camion[camion]
-    cond = state.ubi_conductor[conductor]
-    if cond == cam:
-        return[('conductor_subir_camion', conductor, camion),
-            ('viajar_en_camion',conductor, destino)
-                ]
+    if cam != destino:
+        for conductor in state.conductor:
+            cond = state.ubi_conductor[conductor]
+            if cond == cam:
+                return[('conductor_subir_camion', conductor, camion),
+                        ('viajar_en_camion',conductor,camion, destino),
+                        ('conductor_bajar_camion', conductor, camion)
+                    
+                        ]
+            else:
+                return[ ('conseguir_conductor',conductor,cam),
+                        ('conductor_subir_camion', conductor, camion),
+                        ('viajar_en_camion',conductor,camion, destino),
+                        ('conductor_bajar_camion', conductor, camion)]
+        return []  
     else:
-        return[ ('conseguir_conductor',conductor,destino),
-                ('conductor_subir_camion', conductor, camion),
-                ('viajar_en_camion',conductor, destino),
-                ('conductor_bajar_camion', conductor, camion)]
-    return []    
+        return[]     
+    
+    return False
 
 
 
     
 
-def func_paquete_destino(state, conductor, camion, paquete, destino):
+def func_paquete_destino(state, paquete, destino):
     if destino not in state.ciudad:
         print('La ciudad '+destino+' no existe')
         return False
@@ -94,17 +109,23 @@ def func_paquete_destino(state, conductor, camion, paquete, destino):
 
     paq = state.ubi_paquete[paquete]
     if paq != destino:
-        if paq not in state.camion :
-            return[ ('conseguir_camion',camion,destino),
-                    ('conseguir_conductor',conductor,destino),
-                    ('cargar_paquete', camion, paquete, conductor),
-                    ('conductor_subir_camion', conductor, camion),
-                    ('viajar_en_camion',conductor, destino),
-                    ('conductor_bajar_camion', conductor, camion),
-                    ('descargar_paquete', camion, paquete, conductor)
-                    ]
-        elif paq in state.camion :
-            return[('viajar_en_camion',conductor, destino)]
+        for camion in state.camion:
+            for conductor in state.conductor:
+                if paq not in state.contenido_camiones[camion]:
+                    return[ ('conseguir_camion',camion,paq),
+                            ('conseguir_conductor',conductor,paq),
+                            ('cargar_paquete', camion, paquete, conductor),
+                            ('conductor_subir_camion', conductor, camion),
+                            ('viajar_en_camion',conductor, camion, destino),
+                            ('conductor_bajar_camion', conductor, camion),
+                            ('descargar_paquete', camion, paquete, conductor)
+                            ]
+                        
+                else:
+                    return[('viajar_en_camion',conductor, camion, destino),
+                            ('conductor_bajar_camion', conductor, camion),
+                            ('descargar_paquete', camion, paquete, conductor)
+                            ]
     else:
         return[]
 
