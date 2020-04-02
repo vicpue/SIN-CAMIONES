@@ -43,7 +43,7 @@ def conductor_bajar_camion(state, conductor, camion):
     state.ubi_conductor[conductor] = state.ubi_camion[camion]
     return state
 
-def viajar_en_camion(state, camion, destino):
+def mover_camion(state, camion, destino):
     lugar = state.ubi_camion[camion]
     if (destino in state.carretera[lugar]) or (destino == lugar):
         state.ubi_camion[camion] = destino
@@ -53,13 +53,19 @@ def viajar_en_camion(state, camion, destino):
 
 def viajar_a_pie(state, conductor, destino):
     lugar = state.ubi_conductor[conductor]
-    if (destino in state.senda[lugar]) or (destino == lugar):
-        state.ubi_conductor[conductor] = destino
-        return state
+    if lugar not in state.parada:
+        i=0
+        for p in state.parada:
+            if (((destino == state.senda[i][0]) and (p == state.senda[i][1])) and ((p == state.senda[i][0]) and (lugar == state.senda[i][1])) ):
+                state.ubi_conductor[conductor] = destino
+                return state
+            i+=1
     else:
-        return False
+        for i in range(len(state.senda)):
+            if((lugar == state.senda[i][0]) and (destino == state.senda[i][1])):
+                state.ubi_conductor[conductor] = destino
+                return state
+    return False
     
-pyhop.declare_operators(cargar_paquete, descargar_paquete, conductor_subir_camion, conductor_bajar_camion, viajar_en_camion, viajar_a_pie)
+pyhop.declare_operators(cargar_paquete, descargar_paquete, conductor_subir_camion, conductor_bajar_camion, mover_camion, viajar_a_pie)
 pyhop.print_operators()
-
-    
